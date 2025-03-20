@@ -10,6 +10,7 @@
             width: 500px;
             height: 500px;
             border: 1px solid black;
+            background-color: white;
         }
         .image {
             position: absolute;
@@ -23,48 +24,95 @@
     </style>
 </head>
 <body>
-    <h2>Choisissez une option par catégorie</h2>
+    <h1>CHOIX DU LOGO ASSO PDLF</h1>
+    <h1>SCREENEZ VOS 3 PRÉFÉREZ ET ENVOYER À JULES</h1>
     
     <div>
-        <h3>Catégorie A</h3>
-        <input type="radio" name="A" value="a1"> Sélecteur 1
-        <input type="radio" name="A" value="a2"> Sélecteur 2
-        <input type="radio" name="A" value="a3"> Sélecteur 3
+        <h3>Choix de la couleur</h3>
+        <input type="radio" name="A" value="a1"> Coul 1
+        <input type="radio" name="A" value="a2"> Coul 2
+        <input type="radio" name="A" value="a3"> Coul 3
+        <input type="radio" name="A" value="a4"> Coul 4
     </div>
     <div>
         <h3>Catégorie B</h3>
-        <input type="radio" name="B" value="b1"> Sélecteur 1
-        <input type="radio" name="B" value="b2"> Sélecteur 2
-        <input type="radio" name="B" value="b3"> Sélecteur 3
+        <input type="radio" name="B" value="b1"> Washington
+        <input type="radio" name="B" value="b2"> Bebas Neue
     </div>
     <div>
         <h3>Catégorie C</h3>
-        <input type="radio" name="C" value="c1"> Sélecteur 1
-        <input type="radio" name="C" value="c2"> Sélecteur 2
-        <input type="radio" name="C" value="c3"> Sélecteur 3
+        <input type="radio" name="C" value="c1"> haut bas
+        <input type="radio" name="C" value="c2"> 974 décimale
+        <input type="radio" name="C" value="c3"> 974 binaire
+    </div>
+    
+    <h4>Background</h4>
+    <p>L'objectif est de voir le rendu sur des couleurs différentes (par exemple pour le merch)</p>
+    <div>
+        <input type="radio" name="bgColor" value="white" checked> Blanc
+        <input type="radio" name="bgColor" value="gray"> Gris
+        <input type="radio" name="bgColor" value="black"> Noir
+        <input type="radio" name="bgColor" value="red"> Rouge
+        <input type="radio" name="bgColor" value="blue"> Bleu
+        <input type="radio" name="bgColor" value="green"> Vert
+        <input type="radio" name="bgColor" value="yellow"> Jaune
+        <input type="radio" name="bgColor" value="cyan"> Cyan
+        <input type="radio" name="bgColor" value="magenta"> Magenta
+        <input type="radio" name="bgColor" value="orange"> Orange
+        <input type="radio" name="bgColor" value="purple"> Violet
+        <input type="radio" name="bgColor" value="brown"> Marron
     </div>
     
     <h2>Images affichées</h2>
     <div id="imageContainer">
         <img id="imgA" class="image" src="images/a1.jpg">
-        <img id="imgB" class="image" src="images/b1.jpg">
-        <img id="imgC" class="image" src="images/c1.jpg">
+        <img id="imgB" class="image" src="">
+        <img id="imgBC" class="image" src=""> <!-- Image générée par B et C -->
     </div>
 
     <script>
         const images = {
-            A: { a1: "images/a1.jpg", a2: "images/a2.jpg", a3: "images/a3.jpg" },
-            B: { b1: "images/b1.jpg", b2: "images/b2.jpg", b3: "images/b3.jpg" },
-            C: { c1: "images/c1.jpg", c2: "images/c2.jpg", c3: "images/c3.jpg" }
+            A: { a1: "img/coul1.png", a2: "img/coul2.png", a3: "img/coul3.png", a4: "img/coul4.png" },
+            B: { b1: "img/wash.png", b2: "img/bebn.png"},
+            BC: {
+                "b1c1": "img/washHB.png", "b1c2": "img/washdec.png", "b1c3": "img/washbin.png",
+                "b2c1": "img/bebnHB.png", "b2c2": "img/bebndec.png", "b2c3": "img/bebnbin.png"
+            }
         };
         
-        document.querySelectorAll('input[type=radio]').forEach(radio => {
+        function updateImage(category, value) {
+            if (category === "A") {
+                document.querySelector(`#imgA`).src = images[category][value];
+                document.querySelector(`#imgA`).style.display = 'block';
+            }
+
+            if (category === "B") {
+                document.querySelector(`#imgB`).src = images[category][value];
+                document.querySelector(`#imgB`).style.display = 'block';
+            }
+            
+            // Vérifier la combinaison B et C
+            const selectedB = document.querySelector('input[name="B"]:checked')?.value;
+            const selectedC = document.querySelector('input[name="C"]:checked')?.value;
+            const combinationKey = selectedB && selectedC ? `${selectedB}${selectedC}` : null;
+            
+            if (combinationKey && images.BC[combinationKey]) {
+                document.querySelector(`#imgBC`).src = images.BC[combinationKey];
+                document.querySelector(`#imgBC`).style.display = 'block';
+            } else {
+                document.querySelector(`#imgBC`).style.display = 'none';
+            }
+        }
+        
+        document.querySelectorAll('input[type=radio][name=A], input[type=radio][name=B], input[type=radio][name=C]').forEach(radio => {
             radio.addEventListener('change', (event) => {
-                const category = event.target.name;
-                const value = event.target.value;
-                
-                document.querySelector(`#img${category}`).src = images[category][value];
-                document.querySelector(`#img${category}`).style.display = 'block';
+                updateImage(event.target.name, event.target.value);
+            });
+        });
+        
+        document.querySelectorAll('input[type=radio][name=bgColor]').forEach(radio => {
+            radio.addEventListener('change', (event) => {
+                document.getElementById('imageContainer').style.backgroundColor = event.target.value;
             });
         });
     </script>
