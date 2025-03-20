@@ -24,8 +24,7 @@
     </style>
 </head>
 <body>
-    <h1>CHOIX DU LOGO ASSO PDLF</h1>
-    <h2>Screenez vos 3 préférés(max) et envoyer à Jules</h2>
+    <h2>CHOIX DU LOGO ASSO PDLF</h2>
     
     <div>
         <h3>Choix de la couleur</h3>
@@ -35,18 +34,18 @@
         <input type="radio" name="A" value="a4"> Coul 4
     </div>
     <div>
-        <h3>Police d'écriture</h3>
+        <h3>Catégorie B</h3>
         <input type="radio" name="B" value="b1"> Washington
         <input type="radio" name="B" value="b2"> Bebas Neue
     </div>
     <div>
-        <h3>Format d'écriture</h3>
+        <h3>Catégorie C</h3>
         <input type="radio" name="C" value="c1"> haut bas
         <input type="radio" name="C" value="c2"> 974 décimale
         <input type="radio" name="C" value="c3"> 974 binaire
     </div>
     
-    <h3>Background</h3>
+    <h4>Background</h4>
     <p>L'objectif est de voir le rendu sur des couleurs différentes (par exemple pour le merch)</p>
     <div>
         <input type="radio" name="bgColor" value="white" checked> Blanc
@@ -63,47 +62,77 @@
         <input type="radio" name="bgColor" value="brown"> Marron
     </div>
     
-    <h2>Rendu Final</h2>
+    <h2>Images affichées</h2>
     <div id="imageContainer">
-        <img id="imgA" class="image" src="images/a1.jpg">
+        <img id="imgA" class="image" src="">
         <img id="imgB" class="image" src="">
         <img id="imgBC" class="image" src=""> <!-- Image générée par B et C -->
     </div>
 
     <script>
-        const images = {
-            A: { a1: "img/coul1.png", a2: "img/coul2.png", a3: "img/coul3.png", a4: "img/coul4.png" },
-            B: { b1: "img/wash.png", b2: "img/bebn.png"},
+        // Charger toutes les images une seule fois au démarrage
+        const preloadImages = {
+            A: {
+                a1: new Image(),
+                a2: new Image(),
+                a3: new Image(),
+                a4: new Image()
+            },
+            B: {
+                b1: new Image(),
+                b2: new Image()
+            },
             BC: {
-                "b1c1": "img/washHB.png", "b1c2": "img/washdec.png", "b1c3": "img/washbin.png",
-                "b2c1": "img/bebnHB.png", "b2c2": "img/bebndec.png", "b2c3": "img/bebnbin.png"
+                "b1c1": new Image(),
+                "b1c2": new Image(),
+                "b1c3": new Image(),
+                "b2c1": new Image(),
+                "b2c2": new Image(),
+                "b2c3": new Image()
             }
         };
+
+        // Assigner les sources aux images
+        preloadImages.A.a1.src = "img/coul1.png";
+        preloadImages.A.a2.src = "img/coul2.png";
+        preloadImages.A.a3.src = "img/coul3.png";
+        preloadImages.A.a4.src = "img/coul4.png";
         
+        preloadImages.B.b1.src = "img/wash.png";
+        preloadImages.B.b2.src = "img/bebn.png";
+
+        preloadImages.BC["b1c1"].src = "img/washHB.png";
+        preloadImages.BC["b1c2"].src = "img/washdec.png";
+        preloadImages.BC["b1c3"].src = "img/washbin.png";
+        preloadImages.BC["b2c1"].src = "img/bebnHB.png";
+        preloadImages.BC["b2c2"].src = "img/bebndec.png";
+        preloadImages.BC["b2c3"].src = "img/bebnbin.png";
+
+        // Fonction pour mettre à jour les images
         function updateImage(category, value) {
             if (category === "A") {
-                document.querySelector(`#imgA`).src = images[category][value];
+                document.querySelector(`#imgA`).src = preloadImages.A[value].src;
                 document.querySelector(`#imgA`).style.display = 'block';
             }
 
             if (category === "B") {
-                document.querySelector(`#imgB`).src = images[category][value];
+                document.querySelector(`#imgB`).src = preloadImages.B[value].src;
                 document.querySelector(`#imgB`).style.display = 'block';
             }
-            
-            // Vérifier la combinaison B et C
+
             const selectedB = document.querySelector('input[name="B"]:checked')?.value;
             const selectedC = document.querySelector('input[name="C"]:checked')?.value;
             const combinationKey = selectedB && selectedC ? `${selectedB}${selectedC}` : null;
             
-            if (combinationKey && images.BC[combinationKey]) {
-                document.querySelector(`#imgBC`).src = images.BC[combinationKey];
+            if (combinationKey && preloadImages.BC[combinationKey]) {
+                document.querySelector(`#imgBC`).src = preloadImages.BC[combinationKey].src;
                 document.querySelector(`#imgBC`).style.display = 'block';
             } else {
                 document.querySelector(`#imgBC`).style.display = 'none';
             }
         }
-        
+
+        // Écouter les changements de sélection des radios
         document.querySelectorAll('input[type=radio][name=A], input[type=radio][name=B], input[type=radio][name=C]').forEach(radio => {
             radio.addEventListener('change', (event) => {
                 updateImage(event.target.name, event.target.value);
