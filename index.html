@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sélecteur d'images</title>
+    <style>
+        #imageContainer {
+            position: relative;
+            width: 500px;
+            height: 500px;
+            border: 1px solid black;
+        }
+        .image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h2>Choisissez une option par catégorie</h2>
+    
+    <div>
+        <h3>Catégorie A</h3>
+        <input type="radio" name="A" value="a1"> Sélecteur 1
+        <input type="radio" name="A" value="a2"> Sélecteur 2
+        <input type="radio" name="A" value="a3"> Sélecteur 3
+    </div>
+    <div>
+        <h3>Catégorie B</h3>
+        <input type="radio" name="B" value="b1"> Sélecteur 1
+        <input type="radio" name="B" value="b2"> Sélecteur 2
+        <input type="radio" name="B" value="b3"> Sélecteur 3
+    </div>
+    <div>
+        <h3>Catégorie C</h3>
+        <input type="radio" name="C" value="c1"> Sélecteur 1
+        <input type="radio" name="C" value="c2"> Sélecteur 2
+        <input type="radio" name="C" value="c3"> Sélecteur 3
+    </div>
+    
+    <h2>Images affichées</h2>
+    <div id="imageContainer">
+        <img id="imgA" class="image" src="images/a1.jpg">
+        <img id="imgB" class="image" src="images/b1.jpg">
+        <img id="imgC" class="image" src="images/c1.jpg">
+    </div>
+
+    <script>
+        const images = {
+            A: { a1: "images/a1.jpg", a2: "images/a2.jpg", a3: "images/a3.jpg" },
+            B: { b1: "images/b1.jpg", b2: "images/b2.jpg", b3: "images/b3.jpg" },
+            C: { c1: "images/c1.jpg", c2: "images/c2.jpg", c3: "images/c3.jpg" }
+        };
+        
+        document.querySelectorAll('input[type=radio]').forEach(radio => {
+            radio.addEventListener('change', (event) => {
+                const category = event.target.name;
+                const value = event.target.value;
+                
+                document.querySelector(`#img${category}`).src = images[category][value];
+                document.querySelector(`#img${category}`).style.display = 'block';
+            });
+        });
+    </script>
+</body>
+</html>
